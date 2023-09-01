@@ -8,47 +8,40 @@ const loader = document.getElementById('loader');
 
 let apiQuotes = [];
 
-// Show Loading
-function loading(){
+function showLoadingSpinner(){
     loader.hidden = false;
     quoteContainer.hidden = true;
 }
 
-function complete(){
+
+function hideLoadingSpinner(){
     loader.hidden = true;
     quoteContainer.hidden = false;
 }
 
 // Show new Quote
 function newQuote(){
-    loading();
-// To pick a random quote from API
-const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)];
+    showLoadingSpinner();
+    // To pick a random quote from API
+    const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)];
 
-//Uncomment for local use
-// const quote = localQuotes[Math.floor(Math.random() * localQuotes.length)];
+    //Uncomment for local use
+    // const quote = localQuotes[Math.floor(Math.random() * localQuotes.length)];
 
-// check if author field is blank
-if (!quote.author) {
-    authorText.textContent = 'Unknown';
-} else{
-    authorText.textContent = quote.author;
-}
+    // check if author field is blank
+    !quote.author?authorText.textContent = 'Unknown':authorText.textContent = quote.author;
 
-//Check quote length to determine styling
-if (quote.text.length > 120) {
-    quoteText.classList.add('long-quote');
-} else {
-    quoteText.classList.remove('long-quote');
-}
-// Set quote, Hide loader
-quoteText.textContent = quote.text;
-complete();
+    //Check quote length to determine styling
+    quote.text.length > 120?quoteText.classList.add('long-quote'):quoteText.classList.remove('long-quote');
+
+    // Set quote, Hide loader
+    quoteText.textContent = quote.text;
+    hideLoadingSpinner();
 }
 
 // Get quotes form API
-async function getQuotes(){
-    loading();
+async function getQuotesFromAPI(){
+    showLoadingSpinner();
     const apiUrl = 'https://type.fit/api/quotes'
     try {
         const response = await fetch(apiUrl);
@@ -69,12 +62,12 @@ function tweetQuote(){
 }
 
 // Event listener
-newQuoteBtn.addEventListener('click', ()=>{getQuotes();});
+newQuoteBtn.addEventListener('click', ()=>{getQuotesFromAPI();});
 twitterBtn.addEventListener('click', ()=>{tweetQuote();});
 
 
 // On load
-getQuotes();
+getQuotesFromAPI();
 
 // New Quote local on load
 // newQuote();
